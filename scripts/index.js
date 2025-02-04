@@ -1,35 +1,31 @@
 import {initialCards} from './cards.js';
 
-let content = document.querySelector('.content');
-let cardsList = document.querySelector('.places__list');
-let cards = document.querySelector('.card')
-let deleteButton = document.querySelector('.card__delete-button');
+const content = document.querySelector('.content');
+const cardsList = document.querySelector('.places__list');
 
-
-function deleteButtonListener(cardElement) {
-  // @todo: Функция удаления карточки
-  const deleteButton = cardElement.querySelector('.card__delete-button');
-  deleteButton.addEventListener('click', function() {
-    cardElement.remove();
-  })
+function deleteCard(cardElement) {
+  cardElement.remove();
 }
 
 // @todo: Функция создания карточки
-function addCard(name, link) {
+function createCard(name, link) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
+  const deleteButton = cardElement.querySelector('.card__delete-button');
 
   cardElement.querySelector('.card__image').src = link;
   cardElement.querySelector('.card__title').textContent = name;
 
-  deleteButtonListener(cardElement);
+  deleteButton.addEventListener('click', function () {
+    deleteCard(cardElement)
+  })
 
-  cardsList.appendChild(cardElement);
+  return cardElement
 }
 
 // @todo: Вывести карточки на страницу
-function renderCards(cards) {
-  cards.forEach(card => addCard(card.name, card.link));
-}
-
-renderCards(initialCards);
+initialCards.forEach((card) => {
+  const cardElement = createCard(card.name, card.link);
+  cardsList.append(cardElement);
+})
+  
