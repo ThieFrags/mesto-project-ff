@@ -1,3 +1,5 @@
+import { openModal } from './modal.js';
+
 const initialCards = [
   {
     name: "Архыз",
@@ -29,20 +31,42 @@ function deleteCard(cardElement) {
   cardElement.remove();
 }
 
-// Функция создания карточки
-function createCard(name, link) {
+function handleLike(evt) {
+  evt.target.classList.toggle('card__like-button_is-active');
+}
+
+function handleImageClick(link, name) {
+  const imagePopup = document.querySelector('.popup_type_image');
+  const popupImage = imagePopup.querySelector('.popup__image');
+  const popupCaption = imagePopup.querySelector('.popup__caption');
+
+  popupImage.src = link;
+  popupImage.alt = name;
+  popupCaption.textContent = name;
+
+  openModal(imagePopup)
+}
+
+function createCard(name, link, callback) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const deleteButton = cardElement.querySelector('.card__delete-button');
+  const likeButton = cardElement.querySelector('.card__like-button');
+  const cardImage = cardElement.querySelector('.card__image');
 
-  cardElement.querySelector('.card__image').src = link;
+  cardImage.src = link;
+  cardImage.alt = name;
   cardElement.querySelector('.card__title').textContent = name;
 
-  deleteButton.addEventListener('click', function () {
+  deleteButton.addEventListener('click', function() {
     deleteCard(cardElement);
   });
+
+  likeButton.addEventListener('click', callback);
+
+  cardImage.addEventListener('click', () => handleImageClick(link, name));
 
   return cardElement;
 }
 
-export { createCard, initialCards };
+export { createCard, initialCards, handleLike };
